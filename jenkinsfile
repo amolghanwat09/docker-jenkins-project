@@ -1,0 +1,32 @@
+node {
+    stage('git checkout') {
+        
+        git 'https://github.com/amolghanwat09/docker-jenkins-project.git'
+    }
+    
+    stage('Docker Build'){
+        
+        sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID . '
+        sh 'docker image tag $JOB_NAME:v1.$BUILD_ID amolghanwat/$JOB_NAME:v1.$BUILD_ID'
+        sh 'docker image tag $JOB_NAME:v1.$BUILD_ID amolghanwat/$JOB_NAME:latest'
+    }
+    stage('Docker Push: Pushing image to DockerHub'){
+        withCredentials([string(credentialsId: 'dockerhubpw2', variable: 'dockerhubpw')]) {
+            sh "docker login -u amolghanwat -p ${dockerhubpw}"
+            sh 'docker image push amolghanwat/$JOB_NAME:v1.$BUILD_ID'
+            sh 'docker image push amolghanwat/$JOB_NAME:latest'
+            sh 'docker image rm amolghanwat/$JOB_NAME:latest $JOB_NAME:v1.$BUILD_ID'
+    
+}
+   
+    }
+    Stage('docker container Deployment') {
+        def docker_run = 'docker run -itd --name scriptedcontainer -p 9000:80 amolghanwat/docker-groovy-webapp
+        sshagent(['webapp_server']) {
+            
+            sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.37.48 ${docker_run}"
+    
+}
+    }
+    
+}
