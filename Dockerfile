@@ -1,5 +1,6 @@
 FROM  centos:latest
 MAINTAINER amolghanwat09@gmail.com
+RUN yum install update -y
 RUN yum install -y httpd\
  zip\
  unzip
