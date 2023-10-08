@@ -5,6 +5,6 @@
    - name: remove container
      shell: docker container rm mydockercontainer
    - name: remove docker image
-     shell: docker image rmi amolghanwat09/docker_image
+     shell: docker image rmi amolghanwat/docker_image
    - name: create new container
-     shell: docker container run -itd --name mydockercontainer -p 9000:80 amolghanwat09/docker_image
+     shell: docker container run -itd --name mydockercontainer -p 9000:80 amolghanwat/docker_image
